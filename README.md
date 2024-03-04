@@ -1,5 +1,9 @@
 ## BlockadeAimbot
  An aimbot project test to cheat in a game protected by Easy Anti Cheat 
+
+ Two modes are supported:
+ - Aim to enemy colours (red, blue, green) and faces
+ - Aim to screen-detected movements
  
 
 https://github.com/MrPio/BlockadeAimbot/assets/22773005/157b7220-ff4d-474d-b34f-a9183583b801
