@@ -4,8 +4,9 @@
  Two modes are supported:
  - Aim to enemy colours (red, blue, green) and faces
  - Aim to screen-detected movements
- 
-### Demo (aiming to specific objects)
+
+While Easy Anti Cheat seems to block almost all the libraries performing fake mouse movement, `win32api.mouse_event()` seems to deceive it. Furthermore, a slight delay in movement to simulate a human gesture was introduced.
+### Demo (aiming at specific objects)
 
 https://github.com/MrPio/BlockadeAimbot/assets/22773005/157b7220-ff4d-474d-b34f-a9183583b801
 
