@@ -1,4 +1,3 @@
-import datetime
 import os
 import time
 from types import NoneType
@@ -26,10 +25,11 @@ beeps = [
     mixer.Sound('raw/beep_in_02.wav'),
     mixer.Sound('raw/beep_out_01.wav')
 ]
+[beep.set_volume(0.25) for beep in beeps]
 
 
 class EnemyDetector:
-    def __init__(self):
+    def __init__(self) -> None:
         screen_size = pyautogui.size()
         self.screen_region = (
             int(screen_size[0] * 0.3),
@@ -38,24 +38,30 @@ class EnemyDetector:
             int(screen_size[1] * 0.4),
         )
 
-    def detect(self) -> tuple[bool, int, int]:
+    def detect(self, img: np.array = None) -> tuple[bool, int, int]:
         face = (np.array([80, 160, 160]), np.array([102, 240, 240]))
         blue = (np.array([0, 100, 8]), np.array([40, 250, 160]))
+        zorro_blue = (np.array([0, 120, 76]), np.array([11, 156, 90]))
         red = (np.array([110, 200, 135]), np.array([170, 250, 160]))
         green = (np.array([40, 170, 90]), np.array([80, 250, 160]))
 
-        screenshot = pyautogui.screenshot(region=self.screen_region)
+        screenshot = numpy.array(pyautogui.screenshot(region=self.screen_region)) if img is None else img
+        # cv2.imshow('screenshot', screenshot[:, :, ::-1])
+        # cv2.waitKey(1000)
         hsv = cv2.cvtColor(numpy.array(screenshot), cv2.COLOR_BGR2HSV)
-        for color in [face, blue, red, green]:
+        for color in [zorro_blue]:
             mask = cv2.inRange(hsv, color[0], color[1])
-            cv2.imwrite("target.png", mask)
+            # cv2.imshow('screenshot', mask)
+            # cv2.waitKey(2000)
+            # cv2.imwrite("target.png", mask)
             contoursOrange, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             for c in contoursOrange:
-                if cv2.contourArea(c) <= 80:
+                if cv2.contourArea(c) <= 60:
                     continue
                 x, y, h, w = cv2.boundingRect(c)
-                print('detected enemy at: ', x + h / 2, y + w / 2)
-                return True, int(x + h / 2 - screenshot.width / 2), int(y + w / 2 - screenshot.height / 2)
+                pos = (int(x + h / 2 - screenshot.shape[1] / 2), int(y + w / 2 - screenshot.shape[0] / 2))
+                print('detected enemy at: ', pos)
+                return True, pos[0], pos[1]
         return False, 0, 0
 
 
@@ -186,7 +192,7 @@ def aimbot2():
     pyautogui.moveTo(screen_grabber.screen_w // 2, screen_grabber.screen_h // 2)
     screen_grabber.take_screen()
 
-    for i in range(60):
+    for i in range(120):
         beeps[0].play()
         found, x, y = enemy_detector.detect()
         if found:
@@ -194,16 +200,13 @@ def aimbot2():
             beeps[2].play()
             MouseManager.move(x, y)
             MouseManager.click(0.25)
-
-        pyautogui.sleep(0.08)
+        else:
+            pyautogui.sleep(0.08)
 
 
 def test():
-    enemy_detector.detect()
-    # w, h = pyautogui.size()
-    # MouseManager.move(w // 2, -h // 2)
-    # win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, w // 2, -h // 2, 0, 0)
-    # mouse_manager.click(duration=0.25)
+    for e in range(1, 4):
+        enemy_detector.detect(cv2.imread(f'test_screens/test_{e}.png')[:, :, ::-1])
 
 
 def handle_mouse(mouse_event: winput.MouseEvent):
