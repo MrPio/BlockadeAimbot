@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 from types import NoneType
 
@@ -15,9 +16,9 @@ from pygame import mixer
 
 pyautogui.PAUSE = 0
 pyautogui.MINIMUM_DURATION = 0
-SCALE_FACTOR_X = 1.75
-SCALE_FACTOR_Y = 1.7
-EXPONENTIAL_FACTOR = 0.9
+SCALE_FACTOR_X = 1.75 * 2 *0.594
+SCALE_FACTOR_Y = 1.775 * 1.7 *0.594
+EXPONENTIAL_FACTOR = 0.69
 
 mixer.init()
 beeps = [
@@ -25,7 +26,7 @@ beeps = [
     mixer.Sound('raw/beep_in_02.wav'),
     mixer.Sound('raw/beep_out_01.wav')
 ]
-[beep.set_volume(0.25) for beep in beeps]
+[beep.set_volume(0.01) for beep in beeps]
 
 
 class EnemyDetector:
@@ -56,8 +57,9 @@ class EnemyDetector:
             # cv2.imwrite("target.png", mask)
             contoursOrange, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             for c in contoursOrange:
-                if cv2.contourArea(c) <= 60:
+                if cv2.contourArea(c) <= 23:
                     continue
+                print(cv2.contourArea(c))
                 x, y, h, w = cv2.boundingRect(c)
                 pos = (int(x + h / 2 - screenshot.shape[1] / 2), int(y + w / 2 - screenshot.shape[0] / 2))
                 print('detected enemy at: ', pos)
@@ -138,7 +140,7 @@ class ScreenGrabber:
 
 class MouseManager:
     STEP = 100
-    STEP_DURATION = 0.01
+    STEP_DURATION = 0.005
 
     @staticmethod
     def move(x: int, y: int):
@@ -192,16 +194,16 @@ def aimbot2():
     pyautogui.moveTo(screen_grabber.screen_w // 2, screen_grabber.screen_h // 2)
     screen_grabber.take_screen()
 
-    for i in range(120):
+    for i in range(500):
         beeps[0].play()
         found, x, y = enemy_detector.detect()
         if found:
             print(f'moving for {(x, y)}')
             beeps[2].play()
             MouseManager.move(x, y)
-            MouseManager.click(0.25)
+            threading.Thread(target=lambda: MouseManager.click(0.2)).start()
         else:
-            pyautogui.sleep(0.08)
+            pyautogui.sleep(0.005)
 
 
 def test():
