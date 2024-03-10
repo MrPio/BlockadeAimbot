@@ -6,6 +6,11 @@
  - Aim to screen-detected movements
 
 While Easy Anti Cheat seems to block almost all the libraries performing fake mouse movement, `win32api.mouse_event()` seems to deceive it. Furthermore, a slight delay in movement to simulate a human gesture was introduced.
+
+### In-game (Before parameter adjusting)
+
+https://github.com/MrPio/BlockadeAimbot/assets/22773005/575ff446-f268-498e-91c1-07f7db9342c1
+
 ### Demo (detecting enemy)
 
 https://github.com/MrPio/BlockadeAimbot/assets/22773005/9b5b4045-a6d0-42f3-a98d-2b7aecffc336
