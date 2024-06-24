@@ -22,5 +22,6 @@ https://github.com/MrPio/BlockadeAimbot/assets/22773005/157b7220-ff4d-474d-b34f-
 https://github.com/MrPio/BlockadeAimbot/assets/22773005/2b04a0ee-87b9-41bf-904d-8fa69a37aba7
 
 
-
+## Related works
+UNET for segmentation: https://github.com/manuu1311/Blockade_aimbot
 
